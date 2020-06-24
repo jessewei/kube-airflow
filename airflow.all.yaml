@@ -64,12 +64,16 @@ spec:
       targetPort: flower
       nodePort: 32081
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: postgres
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: airflow  
+      tier: db      
   template:
     metadata:
       labels:
@@ -90,12 +94,16 @@ spec:
          - name: POSTGRES_DB
            value: "airflow"
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: rabbitmq
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: airflow 
+      tier: rabbitmq      
   template:
     metadata:
       labels:
@@ -119,12 +127,16 @@ spec:
         - name: RABBITMQ_DEFAULT_VHOST
           value: airflow
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: web
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: airflow 
+      tier: web   
   template:
     metadata:
       labels:
@@ -149,12 +161,16 @@ spec:
           initialDelaySeconds: 240
           periodSeconds: 60
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: flower
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: airflow 
+      tier: flower     
   template:
     metadata:
       labels:
@@ -176,12 +192,16 @@ spec:
           containerPort: 5555
         args: ["flower"]
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: scheduler
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: airflow 
+      tier: scheduler      
   template:
     metadata:
       labels:
@@ -199,12 +219,16 @@ spec:
           value: "/usr/local/airflow"
         args: ["scheduler", "-n", "5"]
 ---
-apiVersion: extensions/v1beta1
+apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: worker
 spec:
   replicas: 1
+  selector:
+    matchLabels:
+      app: airflow 
+      tier: worker     
   template:
     metadata:
       labels:
