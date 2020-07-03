@@ -1,7 +1,7 @@
 # Workers are not in deployment, but in StatefulSet, to allow each worker expose a mini-server
 # that only serve logs, that will be used by the web server.
 
-apiVersion: apps/v1beta1
+apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ template "airflow.fullname" . }}-worker
@@ -18,6 +18,10 @@ spec:
   #   https://github.com/kubernetes/kubernetes/commit/c2c5051adf096ffd48bf1dcf5b11cb47e464ecdd
   podManagementPolicy: Parallel
   replicas: {{ .Values.celery.num_workers }}
+  selector:
+    matchLabels:  
+        app: {{ template "airflow.name" . }}-worker
+        release: {{ .Release.Name }}    
   template:
     metadata:
       labels:
